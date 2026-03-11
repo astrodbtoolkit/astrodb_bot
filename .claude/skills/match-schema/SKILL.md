@@ -38,24 +38,20 @@ It also documents how to handle uncertainty columns (`_error`, `_error_upper`, `
 
 ## Output
 
-Render a table directly in your response (not in a code block) with one row per input column:
+Write results to `/tmp/schema-match-result.html` using the `Write` tool. Follow the full visual
+spec in `references/html-output.md` — read it now before writing the file.
 
-| Input Column | Description | Units | DB Table | DB Field | Confidence | Notes |
-|---|---|---|---|---|---|---|
+Tell the user the file path and suggest opening it with VSCode's built-in HTML preview
+(right-click the file → Open Preview) or in a browser.
+
+As part of the HTML file, also generate a **Lookup Table Checklist** section — one mini-table
+per lookup table that will need new entries before ingestion can proceed. See
+`references/html-output.md` for the visual spec and the rules for which lookup tables to check.
+
+After writing the file, give a short plain-text summary in the chat (2–4 sentences) noting how
+many columns matched at each confidence level and flagging anything critical.
 
 **Confidence levels:**
 - **High**: Name clearly matches a known pattern, or name + units together are unambiguous
 - **Medium**: Units or description match but name is generic; or name matches but units are unexpected
 - **Low**: Only a weak contextual signal; flagging as possible match with uncertainty
-
-After the table, add two sections:
-
-### Unmatched columns
-List any columns with no match and briefly explain why. Suggest whether `ModeledParameters` or `CompanionParameters` could accommodate them.
-
-### Ingestion notes
-Point out any important issues:
-- Columns that need **unit conversion** before ingestion (e.g., parallax in arcsec → mas, period in days → hours)
-- Columns where the same input column might map to **multiple rows** in the DB (e.g., one photometry column per band becomes a separate row in the Photometry table)
-- Columns that appear to be **duplicates** of each other (e.g., two RA columns)
-- Any **required fields** that are missing from the input (e.g., `source` identifier is required in every data table row — flag if no obvious source column exists)
