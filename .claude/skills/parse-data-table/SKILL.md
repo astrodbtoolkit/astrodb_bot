@@ -1,5 +1,5 @@
 ---
-name: parsedatatable
+name: parse-data-table
 description: Parse a data table file and extract column information (name, description, units, type). Supports FITS, CSV, ECSV, HDF5, VOTable, Parquet, Excel, and more. Generates a markdown table summarizing the columns.
 compatibility: python, astropy, pandas
 metadata:
