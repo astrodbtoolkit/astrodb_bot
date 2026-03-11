@@ -129,5 +129,54 @@
         }
       ]
     }
+  ,
+    {
+      "id": 4,
+      "prompt": "I have a FITS catalog of nearby galaxies called NearbyGalaxies_Jan2021_PUBLIC.fits and I want to load it into AstroDB. I ran parse-data-table on it and got this column summary. Can you map each column to the right AstroDB table and field?\n\n| Column | Description | Units | Type |\n|--------|-------------|-------|------|\n| GalaxyName | Galaxy name | — | str |\n| RA | Right Ascension (hours minutes seconds) | hms | str |\n| Dec | Declination (degrees arcminutes arcseconds) | dms | str |\n| EB-V | E(B-V) dust reddening | mag | float32 |\n| dmod | Distance Modulus (m-M)o | mag | float32 |\n| dmod+ | Distance Modulus error upper | mag | float32 |\n| dmod- | Distance Modulus error lower | mag | float32 |\n| vh | Heliocentric radial velocity | km/s | float32 |\n| vh+ | vh error upper | km/s | float32 |\n| vh- | vh error lower | km/s | float32 |\n| Vmag | Apparent V magnitude (Vega) | mag | float32 |\n| Vmag+ | Vmag error upper | mag | float32 |\n| Vmag- | Vmag error lower | mag | float32 |\n| PA | Position angle | deg | float32 |\n| PA+ | PA error upper | deg | float32 |\n| PA- | PA error lower | deg | float32 |\n| e=1-b/a | Projected ellipticity | — | float32 |\n| e+ | Ellipticity error upper | — | float32 |\n| e- | Ellipticity error lower | — | float32 |\n| muVo | Central V surface brightness | mag/arcsec^2 | float32 |\n| muVo+ | muVo error upper | mag/arcsec^2 | float32 |\n| muVo- | muVo error lower | mag/arcsec^2 | float32 |\n| rh | Half-light radius on major axis | arcmin | float32 |\n| rh+ | rh error upper | arcmin | float32 |\n| rh- | rh error lower | arcmin | float32 |\n| sigma_s | Stellar radial velocity dispersion | km/s | float32 |\n| sigma_s+ | sigma_s error upper | km/s | float32 |\n| sigma_s- | sigma_s error lower | km/s | float32 |\n| vrot_s | Stellar peak/max rotation velocity | km/s | float32 |\n| vrot_s+ | vrot_s error upper | km/s | float32 |\n| vrot_s- | vrot_s error lower | km/s | float32 |\n| MHI | HI mass | Msun | float32 |\n| sigma_g | HI radial velocity dispersion | km/s | float32 |\n| sigma_g+ | sigma_g error upper | km/s | float32 |\n| sigma_g- | sigma_g error lower | km/s | float32 |\n| vrot_g | HI peak/max rotation velocity | km/s | float32 |\n| vrot_g+ | vrot_g error upper | km/s | float32 |\n| vrot_g- | vrot_g error lower | km/s | float32 |\n| [Fe/H] | Stellar mean metallicity | dex | float32 |\n| feh+ | [Fe/H] error upper | dex | float32 |\n| feh- | [Fe/H] error lower | dex | float32 |\n| F | Flag | — | int16 |\n| pmra | Proper motion in RA*cos(dec) | mas/yr | float32 |\n| epmra+ | pmra error upper | mas/yr | float32 |\n| epmra- | pmra error lower | mas/yr | float32 |\n| pmdec | Proper motion in declination | mas/yr | float32 |\n| epmdec+ | pmdec error upper | mas/yr | float32 |\n| epmdec- | pmdec error lower | mas/yr | float32 |\n| References | Reference bibcodes | — | str |",
+      "expected_output": "Galaxy catalog mapped to AstroDB: GalaxyName→Sources, RA/Dec→Sources coordinates (with note on sexagesimal conversion), vh→RadialVelocities, Vmag→Photometry, pmra/pmdec→ProperMotions, [Fe/H]→ModeledParameters. Galaxy-specific columns (ellipticity, surface brightness, half-light radius, velocity dispersions, HI mass) flagged as not having direct AstroDB fields or mapped to ModeledParameters/CompanionParameters. Asymmetric error columns (dmod+/dmod-) noted as non-standard.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "eval4_galaxyname_sources",
+          "text": "Column 'GalaxyName' is mapped to Sources table and source field"
+        },
+        {
+          "id": "eval4_vh_radial_velocities",
+          "text": "Column 'vh' is mapped to RadialVelocities table and rv_kms field"
+        },
+        {
+          "id": "eval4_Vmag_photometry",
+          "text": "Column 'Vmag' is mapped to Photometry table and magnitude field"
+        },
+        {
+          "id": "eval4_pmra_proper_motions",
+          "text": "Column 'pmra' is mapped to ProperMotions table and pm_ra field"
+        },
+        {
+          "id": "eval4_pmdec_proper_motions",
+          "text": "Column 'pmdec' is mapped to ProperMotions table and pm_dec field"
+        },
+        {
+          "id": "eval4_feh_modeled_params",
+          "text": "Column '[Fe/H]' is mapped to ModeledParameters table"
+        },
+        {
+          "id": "eval4_asymmetric_errors_noted",
+          "text": "The output notes that asymmetric error columns (e.g. dmod+/dmod-) are non-standard for AstroDB which uses symmetric errors, and explains how to handle them"
+        },
+        {
+          "id": "eval4_galaxy_params_flagged",
+          "text": "Galaxy-specific columns (ellipticity e=1-b/a, surface brightness muVo, half-light radius rh, HI mass MHI) are either flagged as having no direct AstroDB field or suggested for ModeledParameters"
+        },
+        {
+          "id": "eval4_ra_dec_conversion_noted",
+          "text": "The output notes that RA and Dec are in sexagesimal (hms/dms) string format and need conversion to decimal degrees before ingestion"
+        },
+        {
+          "id": "eval4_references_bibcode",
+          "text": "Column 'References' is mapped to Publications table or noted as containing bibcode references"
+        }
+      ]
+    }
   ]
 }
