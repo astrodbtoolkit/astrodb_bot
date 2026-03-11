@@ -1,0 +1,15 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: source, datatype: string, description: Source identifier}
+# - {name: rv_kms, datatype: float64, unit: km/s, description: Heliocentric radial velocity}
+# - {name: rv_error, datatype: float64, unit: km/s, description: RV uncertainty}
+# - {name: reference, datatype: string, description: Reference bibcode}
+# schema: astropy-2.0
+source rv_kms rv_error reference
+"2MASS J00361617+1821104" 12.45 0.50 "Blake2010"
+"2MASS J00503319+2449009" -5.22 0.31 "Blake2010"
+"2MASS J01033203+1935361" 8.91 0.44 "Blake2010"
+"2MASS J01075242+0041563" 22.10 0.62 "Blake2010"
+"2MASS J01195227+0030261" -11.34 0.28 "Blake2010"
+"2MASS J01225093-2439505" 3.77 0.41 "Blake2010"

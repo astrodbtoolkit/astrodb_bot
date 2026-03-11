@@ -1,0 +1,18 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: name, datatype: string, description: Source designation}
+# - {name: band, datatype: string, description: Filter name}
+# - {name: mag, datatype: string, description: Magnitude (some entries are non-numeric flags)}
+# - {name: mag_err, datatype: float64, unit: mag, description: Magnitude uncertainty}
+# - {name: telescope, datatype: string, description: Telescope name}
+# - {name: ref, datatype: string, description: Reference}
+# schema: astropy-2.0
+name band mag mag_err telescope ref
+"2MASS J00361617+1821104" "2MASS/J" "11.34" 0.02 "2MASS" "Cutri2003"
+"2MASS J00361617+1821104" "2MASS/H" "10.62" 0.02 "2MASS" "Cutri2003"
+"2MASS J00361617+1821104" "2MASS/Ks" "sat" 0.03 "2MASS" "Cutri2003"
+"2MASS J00503319+2449009" "2MASS/J" "13.01" 0.02 "2MASS" "Cutri2003"
+"2MASS J00503319+2449009" "2MASS/H" "12.45" 0.03 "2MASS" "Cutri2003"
+"2MASS J00503319+2449009" "2MASS/Ks" "nd" 0.04 "2MASS" "Cutri2003"
+"2MASS J01033203+1935361" "2MASS/J" "12.78" 0.02 "2MASS" "Cutri2003"

@@ -1,0 +1,19 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: source_id, datatype: string, description: Primary identifier}
+# - {name: ra, datatype: float64, unit: deg, description: Right ascension}
+# - {name: dec, datatype: float64, unit: deg, description: Declination}
+# - {name: plx, datatype: float64, unit: mas, description: Parallax}
+# - {name: e_plx, datatype: float64, unit: mas, description: Parallax uncertainty}
+# - {name: ref, datatype: string, description: Reference bibcode}
+# schema: astropy-2.0
+source_id ra dec plx e_plx ref
+"2MASS J00361617+1821104" 9.067383 18.352897 114.20 0.31 "Gaia2018"
+"2MASS J00503319+2449009" 12.638317 24.816944 "" 1.10 "Gaia2018"
+"2MASS J01033203+1935361" 15.883465 19.593361 56.34 0.45 "Gaia2018"
+"2MASS J01075242+0041563" 16.968433 0.699008 "" 2.30 "Gaia2018"
+"2MASS J01195227+0030261" 19.967820 0.507256 78.91 0.88 "Gaia2018"
+"2MASS J01225093-2439505" 20.712223 -24.664046 120.43 0.23 "Gaia2018"
+"2MASS J01514155+1244304" 27.923130 12.741790 "" 1.56 "Gaia2018"
+"2MASS J02071374+5950094" 31.807275 59.836006 62.77 0.67 "Gaia2018"
