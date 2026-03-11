@@ -94,7 +94,7 @@ actually triggered by the mapped columns — omit any that are not relevant.
 
 | Lookup Table | When to include | What to list |
 |---|---|---|
-| PhotometryFilters | Any column mapped to `Photometry.magnitude` | One row per band: the band name (e.g. G, BP, RP, J, W1) and any known effective wavelength |
+| PhotometryFilters | Any column mapped to `Photometry.magnitude` | One row per band: the **SVO filter ID** (e.g. `2MASS/2MASS.J`, `Gaia/Gaia3.G`) as the `band` value, plus any known effective wavelength. See https://svo2.cab.inta-csic.es/theory/fps3/ for IDs. |
 | ParameterList | Any column mapped to `ModeledParameters.parameter` or `CompanionParameters.parameter` | One row per parameter name (e.g. "distance", "Teff", "logg") |
 | CompanionList | Any column mapped to `CompanionRelationships.companion` | One row per unique companion name found in the mapped column |
 | AssociationList | Any column mapped to `Associations.association` | One row per unique association name |
@@ -109,7 +109,10 @@ Each mini-table has an `<h3>` heading with the lookup table name, followed by a 
 with a light yellow-orange header (`background:#f0a500`, white text) to distinguish it from the
 main mapping table. Include only the columns that are relevant and known from the input data:
 
-**PhotometryFilters columns:** `band` | `ucd` (if known) | `effective_wavelength_angstroms` (if known) | `width_angstroms` (if known)
+**PhotometryFilters columns:** `band` (SVO filter ID, e.g. `2MASS/2MASS.J`) | `ucd` (if known) | `effective_wavelength_angstroms` (if known) | `width_angstroms` (if known)
+
+The `band` cell should show the full SVO filter ID. If the ID could not be resolved unambiguously,
+show the raw band name in a red placeholder cell with a tooltip or note: *confirm SVO ID at https://svo2.cab.inta-csic.es/theory/fps3/*
 
 **ParameterList columns:** `parameter` | `description` (suggested text)
 

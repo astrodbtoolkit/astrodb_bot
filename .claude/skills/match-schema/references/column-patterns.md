@@ -30,6 +30,36 @@ Column names that *are* a band name (case-insensitive), or end/start with a band
 - Corresponding errors (`eJmag`, `J_err`, `e_Jmag`, `Jmag_err`, `eW1`, etc.) → `Photometry.magnitude_error`
 - If there are asymmetric upper/lower error columns, map them to `magnitude_error_upper` / `magnitude_error_lower`
 
+**Photometry band → SVO filter ID:**
+The `band` value stored in `PhotometryFilters` must be an SVO Filter Profile Service ID
+(`Facility/Instrument.Band`). Map common band names as follows:
+
+| Bare band name | SVO filter ID |
+|---|---|
+| J (2MASS) | `2MASS/2MASS.J` |
+| H (2MASS) | `2MASS/2MASS.H` |
+| K / Ks (2MASS) | `2MASS/2MASS.Ks` |
+| W1 | `WISE/WISE.W1` |
+| W2 | `WISE/WISE.W2` |
+| W3 | `WISE/WISE.W3` |
+| W4 | `WISE/WISE.W4` |
+| u (SDSS) | `SDSS/SDSS.u` |
+| g (SDSS) | `SDSS/SDSS.g` |
+| r (SDSS) | `SDSS/SDSS.r` |
+| i (SDSS) | `SDSS/SDSS.i` |
+| z (SDSS) | `SDSS/SDSS.z` |
+| G (Gaia DR3) | `Gaia/Gaia3.G` |
+| BP (Gaia DR3) | `Gaia/Gaia3.Gbp` |
+| RP (Gaia DR3) | `Gaia/Gaia3.Grp` |
+| B (Johnson) | `Generic/Johnson.B` |
+| V (Johnson) | `Generic/Johnson.V` |
+| R (Cousins) | `Generic/Cousins.R` |
+| I (Cousins) | `Generic/Cousins.I` |
+
+For any band not in this table, search https://svo2.cab.inta-csic.es/theory/fps3/ to find the
+correct ID. If the telescope or instrument is ambiguous, flag the band in the output and ask the
+user to confirm the SVO ID.
+
 **Rotational parameters:**
 - `period`, `rot_period`, `Prot`, `P_rot`, `rotation_period` → `RotationalParameters.period_hr` (note: units matter — convert to hours if in days)
 - `vsini`, `v_sin_i`, `vrot`, `vsini_kms` → `RotationalParameters.v_sin_i_kms`
