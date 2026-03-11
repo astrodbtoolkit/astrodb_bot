@@ -36,6 +36,8 @@ Read `references/column-patterns.md` for the full matching rules. It covers thre
 
 It also documents how to handle uncertainty columns (`_error`, `_error_upper`, `_error_lower`) and catch-all tables (`ModeledParameters`, `CompanionParameters`) for unmapped physical parameters.
 
+If a column remains unmatched after all three layers, prompt the user to either ignore it, assign it to an existing field, create a new field in an existing table, or add a new table to the schema. Give useful suggesstions. Flag unmatched columns clearly in the output.
+
 ## Photometry Filter IDs
 
 Read `references/photometry-filters.md` for the full rules on resolving band names to SVO Filter
