@@ -45,11 +45,9 @@ Profile Service IDs before populating `PhotometryFilters.band`.
 
 ## Output
 
-Write results to `/tmp/schema-match-result.html` using the `Write` tool. Follow the full visual
-spec in `references/html-output.md` — read it now before writing the file.
+Output the results as a markdown table, adding columns onto the output from `parse-data-table` for the matched AstroDB Table, AstroDB Field, Confidence level, and Notes on the match. 
 
-Tell the user the file path and suggest opening it with VSCode's built-in HTML preview
-(right-click the file → Open Preview) or in a browser.
+Also write the results to an HTML file using the `Write` tool. Follow the full visual spec in `references/html-output.md` — read it now before writing the file.
 
 As part of the HTML file, also generate a **Lookup Table Checklist** section — one mini-table
 per lookup table that will need new entries before ingestion can proceed. See
@@ -57,6 +55,7 @@ per lookup table that will need new entries before ingestion can proceed. See
 
 After writing the file, give a short plain-text summary in the chat (2–4 sentences) noting how
 many columns matched at each confidence level and flagging anything critical.
+Tell the user the file path to both the markdown table and the html file.  
 
 **Confidence levels:**
 - **High**: Name clearly matches a known pattern, or name + units together are unambiguous
