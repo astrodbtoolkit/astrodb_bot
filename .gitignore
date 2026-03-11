@@ -1,5 +1,6 @@
 # Skill workspace (testing/evaluation artifacts)
 .claude/skills/*-workspace/
+.claire/
 
 # Python
 __pycache__/
