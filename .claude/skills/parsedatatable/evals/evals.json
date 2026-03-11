@@ -1,0 +1,33 @@
+{
+  "skill_name": "parsedatatable",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Parse this data table file and extract column information: '/Users/kelle/Hunter College Dropbox/Kelle Cruz/Downloads/NearbyGalaxies_Jan2021_PUBLIC (1).fits'",
+      "expected_output": "A markdown table with 49 columns showing name, description, units, and type. Descriptions should be populated for most columns (sourced from FITS TCOMMn headers or embedded VOTable XML). All units will be '—' as none are stored in this file.",
+      "files": ["/Users/kelle/Hunter College Dropbox/Kelle Cruz/Downloads/NearbyGalaxies_Jan2021_PUBLIC (1).fits"],
+      "assertions": [
+        {
+          "text": "Output contains a markdown table with Column, Description, Units, and Type headers",
+          "passed": null,
+          "evidence": ""
+        },
+        {
+          "text": "Output contains all 49 column names from the FITS file",
+          "passed": null,
+          "evidence": ""
+        },
+        {
+          "text": "Descriptions are populated for key columns like GalaxyName, RA, Dec, EB-V, dmod, vh, Vmag (not all '—')",
+          "passed": null,
+          "evidence": ""
+        },
+        {
+          "text": "uv environment setup was used since astropy is not in the default Python env",
+          "passed": null,
+          "evidence": ""
+        }
+      ]
+    }
+  ]
+}
