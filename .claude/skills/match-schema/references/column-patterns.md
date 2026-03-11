@@ -80,6 +80,8 @@ user to confirm the SVO ID.
 - `spectral_type`, `spt`, `SpT`, `sp_type`, `sp_type_adopted` → `SourceTypes.source_type`
 - `association`, `moving_group`, `young_association`, `cluster` → `Associations.association`
 
+Use the data to also populate the SourceTypeList and AssociationList tables with needed values.
+
 **References:**
 - `reference`, `ref`, `bibcode`, `citation` → `Publications.reference`
 
