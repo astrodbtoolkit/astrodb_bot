@@ -1,0 +1,133 @@
+{
+  "skill_name": "match-schema",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I ran parse-data-table on my catalog and got this output. Can you tell me which AstroDB table and field each column belongs to?\n\n| Column | Description | Units | Type |\n|--------|-------------|-------|------|\n| source_id | Primary source identifier | — | str |\n| alt_name | Alternative catalog name | — | str |\n| ra | Right ascension (J2000) | deg | float64 |\n| dec | Declination (J2000) | deg | float64 |\n| plx | Parallax | mas | float64 |\n| e_plx | Parallax uncertainty | mas | float64 |\n| pmRA | Proper motion in RA*cos(dec) | mas/yr | float64 |\n| e_pmRA | Uncertainty in pmRA | mas/yr | float64 |\n| pmDE | Proper motion in declination | mas/yr | float64 |\n| e_pmDE | Uncertainty in pmDE | mas/yr | float64 |\n| RV | Heliocentric radial velocity | km/s | float64 |\n| e_RV | RV uncertainty | km/s | float64 |\n| SpT | Spectral type | — | str |\n| assoc | Moving group or association membership | — | str |\n| ref | Reference bibcode | — | str |",
+      "expected_output": "A markdown table mapping each column to the correct AstroDB table and field with confidence levels and ingestion notes.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "eval1_all_columns_mapped",
+          "text": "All 15 input columns appear in the output table and each has a non-empty DB Table and DB Field assignment (no blanks or N/A for well-known columns)"
+        },
+        {
+          "id": "eval1_plx_parallaxes",
+          "text": "Column 'plx' is mapped to Parallaxes table and parallax_mas field"
+        },
+        {
+          "id": "eval1_e_plx_parallax_error",
+          "text": "Column 'e_plx' is mapped to Parallaxes table and parallax_error field"
+        },
+        {
+          "id": "eval1_pmRA_proper_motions",
+          "text": "Column 'pmRA' is mapped to ProperMotions table and pm_ra field"
+        },
+        {
+          "id": "eval1_pmDE_proper_motions",
+          "text": "Column 'pmDE' is mapped to ProperMotions table and pm_dec field"
+        },
+        {
+          "id": "eval1_RV_radial_velocities",
+          "text": "Column 'RV' is mapped to RadialVelocities table and rv_kms field"
+        },
+        {
+          "id": "eval1_SpT_source_types",
+          "text": "Column 'SpT' is mapped to SourceTypes table and source_type field"
+        },
+        {
+          "id": "eval1_assoc_associations",
+          "text": "Column 'assoc' is mapped to Associations table"
+        },
+        {
+          "id": "eval1_source_id_sources",
+          "text": "Column 'source_id' is mapped to Sources table and source field"
+        },
+        {
+          "id": "eval1_alt_name_names",
+          "text": "Column 'alt_name' is mapped to Names table and other_name field"
+        },
+        {
+          "id": "eval1_ingestion_note_source_fk",
+          "text": "The ingestion notes section mentions that each data table row requires a source foreign key (source identifier is required in each data table)"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Here's the column table from parse-data-table for a multi-band photometry catalog. Please map these to the right AstroDB fields:\n\n| Column | Description | Units | Type |\n|--------|-------------|-------|------|\n| name | Object designation (2MASS or WISE) | — | str |\n| Jmag | 2MASS J-band magnitude | mag | float64 |\n| eJmag | J-band magnitude uncertainty | mag | float64 |\n| Hmag | 2MASS H-band magnitude | mag | float64 |\n| eHmag | H-band uncertainty | mag | float64 |\n| Kmag | 2MASS Ks-band magnitude | mag | float64 |\n| eKmag | Ks-band uncertainty | mag | float64 |\n| W1mag | WISE W1 magnitude | mag | float64 |\n| eW1mag | W1 uncertainty | mag | float64 |\n| W2mag | WISE W2 magnitude | mag | float64 |\n| eW2mag | W2 uncertainty | mag | float64 |\n| Teff | Effective temperature from SED fit | K | float64 |\n| e_Teff | Teff uncertainty | K | float64 |\n| logL | Log luminosity from SED fit | Lsun | float64 |\n| e_logL | logL uncertainty | Lsun | float64 |",
+      "expected_output": "Band magnitude columns map to Photometry.magnitude, errors to Photometry.magnitude_error, with multi-row ingestion note. Teff and logL map to ModeledParameters.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "eval2_name_sources",
+          "text": "Column 'name' is mapped to Sources table and source field"
+        },
+        {
+          "id": "eval2_Jmag_photometry",
+          "text": "Column 'Jmag' is mapped to Photometry table and magnitude field"
+        },
+        {
+          "id": "eval2_eJmag_photometry_error",
+          "text": "Column 'eJmag' is mapped to Photometry table and magnitude_error field"
+        },
+        {
+          "id": "eval2_W1mag_photometry",
+          "text": "Column 'W1mag' is mapped to Photometry table and magnitude field"
+        },
+        {
+          "id": "eval2_Teff_modeled_params",
+          "text": "Column 'Teff' is mapped to ModeledParameters table"
+        },
+        {
+          "id": "eval2_logL_modeled_params",
+          "text": "Column 'logL' is mapped to ModeledParameters table"
+        },
+        {
+          "id": "eval2_multirow_note",
+          "text": "The ingestion notes mention that each photometry band becomes a separate row in the Photometry table (one row per band per source, not one column per band)"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I have a catalog of nearby brown dwarfs with columns from parse-data-table below. I want to ingest this into my AstroDB database. What table/field does each column map to?\n\n| Column | Description | Units | Type |\n|--------|-------------|-------|------|\n| designation | Source name | — | str |\n| RA_ICRS | Right ascension ICRS | deg | float64 |\n| DE_ICRS | Declination ICRS | deg | float64 |\n| dist_pc | Distance | pc | float64 |\n| e_dist | Distance uncertainty | pc | float64 |\n| vsini | Projected rotational velocity | km/s | float64 |\n| e_vsini | vsini uncertainty | km/s | float64 |\n| Prot | Rotation period | d | float64 |\n| e_Prot | Period uncertainty | d | float64 |\n| sep_arcsec | Projected separation from companion | arcsec | float64 |\n| companion_name | Name of companion object | — | str |\n| Gmag | Gaia G magnitude | mag | float64 |\n| BPmag | Gaia BP magnitude | mag | float64 |\n| RPmag | Gaia RP magnitude | mag | float64 |\n| notes | Free-form notes | — | str |",
+      "expected_output": "Handles tricky unit conversions (dist→parallax, days→hours), companion columns, Gaia photometry, and notes field.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "eval3_designation_sources",
+          "text": "Column 'designation' is mapped to Sources table and source field"
+        },
+        {
+          "id": "eval3_dist_pc_flagged",
+          "text": "Column 'dist_pc' is flagged as needing conversion — either note about converting to parallax_mas (1000/dist_pc) for Parallaxes table, or suggesting ModeledParameters as alternative"
+        },
+        {
+          "id": "eval3_Prot_rotational_params",
+          "text": "Column 'Prot' is mapped to RotationalParameters table and period_hr field"
+        },
+        {
+          "id": "eval3_Prot_unit_conversion",
+          "text": "There is a note about unit conversion for Prot from days to hours"
+        },
+        {
+          "id": "eval3_vsini_rotational_params",
+          "text": "Column 'vsini' is mapped to RotationalParameters table and v_sin_i_kms field"
+        },
+        {
+          "id": "eval3_sep_arcsec_companion",
+          "text": "Column 'sep_arcsec' is mapped to CompanionRelationships table and projected_separation_arcsec field"
+        },
+        {
+          "id": "eval3_Gmag_photometry",
+          "text": "Column 'Gmag' is mapped to Photometry table and magnitude field"
+        },
+        {
+          "id": "eval3_notes_comments",
+          "text": "Column 'notes' is mapped to a comments field in some table"
+        }
+      ]
+    }
+  ]
+}
