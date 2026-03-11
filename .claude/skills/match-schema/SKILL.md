@@ -36,6 +36,11 @@ Read `references/column-patterns.md` for the full matching rules. It covers thre
 
 It also documents how to handle uncertainty columns (`_error`, `_error_upper`, `_error_lower`) and catch-all tables (`ModeledParameters`, `CompanionParameters`) for unmapped physical parameters.
 
+## Photometry Filter IDs
+
+Read `references/photometry-filters.md` for the full rules on resolving band names to SVO Filter
+Profile Service IDs before populating `PhotometryFilters.band`.
+
 ## Output
 
 Write results to `/tmp/schema-match-result.html` using the `Write` tool. Follow the full visual
