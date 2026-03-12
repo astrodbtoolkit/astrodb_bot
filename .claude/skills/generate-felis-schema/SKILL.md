@@ -115,14 +115,31 @@ reasonable ceiling (e.g., 30, 50, 100, 256). If you can't observe the data, use 
 
 ## Step 4: Write the schema file
 
-Save the generated YAML to `/tmp/<schema-name>-schema.yaml` using the Write tool.
-
-Also print the full YAML in a code block in the chat so the user can review it inline.
+Save the generated YAML to `/tmp/<schema-name>-schema.yaml` using the Write tool. This is required — always produce a real `.yaml` file. Do not only paste the YAML in the chat; the file is what the user will use.
 
 Tell the user:
-- The file path
+- The file path (so they can open or copy it)
 - How many tables and columns were included
 - Which columns were skipped or flagged (if any)
 - Whether any assumptions were made (e.g., inferred primary keys, default string lengths)
 
-Suggest next steps: validating the schema with `felis validate`, then using it to create the database.
+Do not reproduce the full YAML in the chat — just reference the file path. The user can view it with `cat <file-path>`.
+
+## Step 5: Validate with felis
+
+After writing the file, run `felis validate` on it. If there is a `.venv` directory in the current working directory, use `.venv/bin/felis`; otherwise try `felis` on PATH:
+
+```bash
+.venv/bin/felis validate /tmp/<schema-name>-schema.yaml
+# or
+felis validate /tmp/<schema-name>-schema.yaml
+```
+
+**If validation passes:** tell the user the schema is valid.
+
+**If validation fails:** read the error messages carefully. The most common errors are:
+- A FK constraint references a column in a table that is not defined in the schema (e.g., `#Publications.reference` when `Publications` has no entry in `tables:`). Fix by adding stub table definitions for all referenced tables (see the rule in Step 3 about lookup table stubs).
+- An `@id` is duplicated across tables/columns.
+- A `string` column is missing its `length` field.
+
+Fix the errors, rewrite the file, and re-run validation. Repeat until the schema passes, then tell the user it passed (and briefly mention what was fixed if anything needed fixing).
