@@ -3,29 +3,68 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "Parse this data table file and extract column information: '/Users/kelle/Hunter College Dropbox/Kelle Cruz/Downloads/NearbyGalaxies_Jan2021_PUBLIC (1).fits'",
-      "expected_output": "A markdown table with 49 columns showing name, description, units, and type. Descriptions should be populated for most columns (sourced from FITS TCOMMn headers or embedded VOTable XML). All units will be '—' as none are stored in this file.",
-      "files": ["/Users/kelle/Hunter College Dropbox/Kelle Cruz/Downloads/NearbyGalaxies_Jan2021_PUBLIC (1).fits"],
+      "prompt": "Parse this data table file and extract column information: 'data/NearbyGalaxies_Jan2021_PUBLIC (1).fits'",
+      "expected_output": "A markdown table with 49 columns showing name, description, units, and type. Descriptions should be populated for most columns (sourced from FITS TCOMMn headers or embedded VOTable XML). Units are not stored in the file but should be inferred from column names and descriptions (e.g. velocity columns → km/s, magnitudes → mag, proper motions → mas/yr, ellipticity → dimensionless_unscaled).",
+      "files": ["data/NearbyGalaxies_Jan2021_PUBLIC (1).fits"],
       "assertions": [
         {
           "text": "Output contains a markdown table with Column, Description, Units, and Type headers",
-          "passed": null,
-          "evidence": ""
+          "passed": true,
+          "evidence": "Table written to NearbyGalaxies_Jan2021_PUBLIC (1)-parsed-data-table.md with | Column | Description | Units | Type | headers"
         },
         {
           "text": "Output contains all 49 column names from the FITS file",
-          "passed": null,
-          "evidence": ""
+          "passed": true,
+          "evidence": "All 49 columns present, confirmed by TFIELDS=49 in FITS header"
         },
         {
           "text": "Descriptions are populated for key columns like GalaxyName, RA, Dec, EB-V, dmod, vh, Vmag (not all '—')",
-          "passed": null,
-          "evidence": ""
+          "passed": true,
+          "evidence": "Descriptions sourced from embedded VOTable XML (VOTMETA=T); uncertainty columns inferred from base column; sigma_s- misplacement noted and corrected"
         },
         {
-          "text": "uv environment setup was used since astropy is not in the default Python env",
-          "passed": null,
-          "evidence": ""
+          "text": "Unit 'dimensionless_unscaled' is assigned to the ellipticity column (e=1-b/a) via units inference",
+          "passed": true,
+          "evidence": "units-inference.md rule 'dimensionless quantities (e.g. ellipticity, ratios) → dimensionless_unscaled' applied to e=1-b/a, e+, e-"
+        }
+      ]
+    }
+  ,
+    {
+      "id": 2,
+      "prompt": "Parse this data table file and extract column information: 'data/arecibo_radar_observed_objects_list.csv'",
+      "expected_output": "A markdown table with 8 columns showing name, description, units, and type. Since this is a plain CSV with no embedded metadata, descriptions should be inferred from column names and sample data. The 'Absolute Magnitute' column should have unit 'mag'. The typo in the column name should be noted.",
+      "files": ["data/arecibo_radar_observed_objects_list.csv"],
+      "assertions": [
+        {
+          "text": "Output contains a markdown table with Column, Description, Units, and Type headers",
+          "passed": true,
+          "evidence": "Table written to /tmp/arecibo-columns.md with | Column | Description | Units | Type | headers"
+        },
+        {
+          "text": "Output contains all 8 column names from the CSV file",
+          "passed": true,
+          "evidence": "All 8 columns present: Number, Name, Designation, Category, Components, Absolute Magnitute, Quality Code for Best Images, NASA Link"
+        },
+        {
+          "text": "Descriptions are inferred for all columns (no rows with only '—' as description)",
+          "passed": true,
+          "evidence": "All 8 columns have inferred descriptions from column names and sample data"
+        },
+        {
+          "text": "Unit 'mag' is assigned to the 'Absolute Magnitute' column via units inference",
+          "passed": true,
+          "evidence": "units-inference.md rule 'magnitude → mag' applied; unit set to 'mag'"
+        },
+        {
+          "text": "The typo in 'Absolute Magnitute' (should be 'Magnitude') is noted",
+          "passed": true,
+          "evidence": "Note included in both markdown and HTML output: 'Absolute Magnitute contains a typo in the source file — should be Absolute Magnitude'"
+        },
+        {
+          "text": "astropy was used as the reader",
+          "passed": true,
+          "evidence": "astropy check passed on first try; Table.read() used; sidecar written with reader='astropy'"
         }
       ]
     }

@@ -18,21 +18,28 @@ Work through these options in order — stop at the first one that succeeds:
 
 **Option 1: astropy is already available**
 ```bash
-python3 -c "import astropy; print('ok')"
+python3 -c "import sys; assert sys.version_info >= (3, 11), f'Python 3.11+ required, got {sys.version}'; import astropy; print('ok')"
 ```
-If this prints `ok`, proceed directly to Step 2.
+If this prints `ok`, proceed directly to Step 2. If it raises an `AssertionError`, Python is too old — fall through to Option 2 or 3, which will use a newer Python automatically.
 
 **Option 2: use `uv` (fast, no project directory needed)**
 ```bash
-uv run --with astropy --with pandas python3 script.py
+uv run --python 3.11 --with astropy --with pandas python3 script.py
 ```
-If `uv` is installed, this handles everything — no separate install step required. Use this form to run all scripts in Steps 2–3.
+If `uv` is installed, this handles everything — no separate install step required. The `--python 3.11` flag ensures Python 3.11+ is used. Use this form to run all scripts in Steps 2–3.
 
 **Option 3: `uv` is not installed — use `pip`**
+
+First verify the Python version:
+```bash
+python3 -c "import sys; assert sys.version_info >= (3, 11), f'Need Python 3.11+, got {sys.version}'"
+```
+If that passes:
 ```bash
 pip install astropy pandas
 python3 script.py
 ```
+If that fails, tell the user Python 3.11 or greater is required and ask them to install it or activate an appropriate environment.
 
 **Option 4: nothing works**
 
@@ -43,35 +50,49 @@ If none of the above work, tell the user you're unable to install the required l
 Use `astropy.table.Table.read()` first, which handles most formats automatically. Fall back to `pandas` if needed:
 
 ```python
-import json
+import json, os
 from astropy.table import Table
 
 reader = None
-fmt = None
 pandas_method = None
+
+# Detect format from file extension — more reliable than inspecting table metadata.
+ext = os.path.splitext("$ARGUMENTS")[1].lower()
+fmt_map = {
+    '.fits': 'fits', '.fit': 'fits',
+    '.csv': 'csv', '.ecsv': 'ecsv',
+    '.hdf5': 'hdf5', '.h5': 'hdf5',
+    '.vot': 'votable', '.xml': 'votable',
+    '.parquet': 'parquet',
+    '.xlsx': 'excel', '.xls': 'excel',
+}
+fmt = fmt_map.get(ext)
 
 try:
     t = Table.read("$ARGUMENTS")
     reader = "astropy"
-    fmt = t.meta.get("comments", [None])[0]  # best-effort; may be None
+    n_rows = len(t)
     for col in t.columns:
-        print(col, t[col].description, t[col].unit)
+        print(col, t[col].dtype)  # descriptions/units extracted in Step 3
 except Exception:
     import pandas as pd
     df = pd.read_csv("$ARGUMENTS")  # adjust reader as needed
     reader = "pandas"
     pandas_method = "read_csv"  # update if a different reader was used
+    n_rows = len(df)
     for col in df.columns:
         print(col, df[col].dtype)
 
-# Write sidecar so downstream skills (e.g. validate-schema-mapping) can
-# reuse the same reader without re-discovering the format.
+# Write sidecar so downstream skills (e.g. match-schema, validate-schema-mapping)
+# can reuse the same reader without re-discovering the format.
+# Output file paths are added to the sidecar in Step 5.
 with open("/tmp/astrodb-parse-result.json", "w") as f:
     json.dump({
         "file_path": "$ARGUMENTS",
         "reader": reader,
         "format": fmt,
         "pandas_method": pandas_method,
+        "n_rows": n_rows,
     }, f)
 ```
 
@@ -85,7 +106,23 @@ For each column, extract:
 - **Units** (use "—" if not specified)
 - **Data type** (e.g. `float64`, `int32`, `str`)
 
-**Important:** `t[col].description` may be empty even when descriptions exist in the file. Check format-specific metadata sources described in `references/format-specific-metadata.md`.
+**Important:** `t[col].description` is only reliably populated for ECSV files. For all other formats (FITS, CSV, HDF5, VOTable, etc.), ignore what Step 2 printed for descriptions and extract them using the format-specific methods in `references/format-specific-metadata.md`.
+
+#### Converting dtypes to human-readable strings
+
+The dtype printed by Step 2 may be a raw numpy code. Convert before displaying:
+
+| Raw dtype | Display as |
+|-----------|------------|
+| `>f4`, `float32` | `float32` |
+| `>f8`, `float64` | `float64` |
+| `>i2`, `int16` | `int16` |
+| `>i4`, `int32` | `int32` |
+| `<U9` (any length) | `str` |
+| `\|S10` (any length) | `str` |
+| `bool` | `bool` |
+
+For string columns, you may optionally note the length (e.g. `str (16-char)`) if it is meaningful.
 
 #### Inferring missing descriptions
 
@@ -114,7 +151,50 @@ If there are 10 or more columns still missing descriptions or units, output the 
 
 ### Step 5: Output the results
 
-Output the results as a markdown table:
+Create a new output directory next to the input file, named after the input file's base name with a `-parsed-data-table` suffix. **Do not overwrite an existing directory** — if the directory already exists, append `-1`, `-2`, etc. until a free name is found. For example, if the input is `data/catalog.fits`, create `data/catalog-parsed-data-table/` and save:
+- `data/catalog-parsed-data-table/catalog-parsed-data-table.md`
+- `data/catalog-parsed-data-table/catalog-parsed-data-table.html`
+
+Each file should begin with a metadata block:
+
+```
+# Column Information: <filename>
+
+**File:** `<filename>`
+**Format:** <format>
+**Reader:** <astropy | pandas>
+**Rows:** <n_rows>
+**Columns:** <n_cols>
+```
+
+Then the markdown table:
 
 | Column | Description | Units | Type |
 |--------|-------------|-------|------|
+
+Followed by notes as a bulleted list (e.g. missing metadata, inferred values, source file anomalies).
+
+Do not display this table in the chat — instead, write it to a markdown file using the `Write` tool, and provide a link to that file in the chat.
+
+Also render this result as an HTML file using the `Write` tool, with the same metadata block, table, and notes.
+
+Display links to both the markdown table and the HTML file in the chat, and suggest opening the HTML file with a browser for best visualization.
+
+After writing the output files, update the sidecar to record their paths:
+
+```python
+import json
+
+with open("/tmp/astrodb-parse-result.json") as f:
+    sidecar = json.load(f)
+
+sidecar["output_md"] = "<path to .md file>"
+sidecar["output_html"] = "<path to .html file>"
+
+with open("/tmp/astrodb-parse-result.json", "w") as f:
+    json.dump(sidecar, f)
+```
+
+### Step 6: Iterate as needed
+
+Ask the user to inspect the results table and check if everything looks good, or if they want to make any edits to the descriptions, units, or types. If they want to make edits, allow them to specify which column(s) and what changes to make, then update the markdown and HTML files accordingly.
