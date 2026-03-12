@@ -1,15 +1,6 @@
 ---
 name: validate-schema-mapping
-description: >
-  Validate an AstroDB schema mapping by checking that data columns are compatible with the
-  schema fields they've been mapped to. Use this skill whenever the user has completed a
-  schema mapping (e.g., from the match-schema skill) and wants to check whether the actual
-  data is safe to ingest — specifically: (1) are there null values in data columns that
-  map to non-nullable schema fields, and (2) do data column types match the expected types
-  in schema.yaml? Always use this skill proactively after match-schema produces a mapping,
-  before the user proceeds to write ingestion code. Trigger on phrases like "validate",
-  "check my mapping", "will this ingest cleanly", "are there any type mismatches", "null
-  check", "nullable violations", or "verify schema compatibility".
+description: Validate an AstroDB schema mapping by checking that data columns are compatible with the schema fields they've been mapped to. Use this skill whenever the user has completed a schema mapping (e.g., from the match-schema skill) and wants to check whether the actual data is safe to ingest — specifically: (1) are there null values in data columns that map to non-nullable schema fields, and (2) do data column types match the expected types in schema.yaml? Always use this skill proactively after match-schema produces a mapping, before the user proceeds to write ingestion code. Trigger on phrases like "validate","check my mapping", "will this ingest cleanly", "are there any type mismatches", "null check", "nullable violations", or "verify schema compatibility".
 compatibility: python, astropy, pyyaml
 metadata:
   authors: ["Claude"]
@@ -72,7 +63,31 @@ For each row in the mapping table where DB Table and DB Field are filled in (ski
 rows and rows mapped to "—" or "N/A"):
 
 Write a short Python script to:
-- Load the data file (use `astropy.table.Table.read()` — it handles FITS, ECSV, CSV, VOTable, HDF5)
+- Load the data file. First check for the sidecar written by parse-data-table:
+  ```python
+  import json, os
+  sidecar = "/tmp/astrodb-parse-result.json"
+  if os.path.exists(sidecar):
+      meta = json.load(open(sidecar))
+      reader      = meta["reader"]        # "astropy" or "pandas"
+      fmt         = meta["format"]        # astropy format hint, or None
+      pandas_meth = meta["pandas_method"] # e.g. "read_csv", or None
+  else:
+      reader, fmt, pandas_meth = "astropy", None, None
+  ```
+  Then load with the same reader that parse-data-table already verified:
+  ```python
+  from astropy.table import Table
+  import pandas as pd
+
+  if reader == "astropy":
+      kwargs = {"format": fmt} if fmt else {}
+      t = Table.read(data_file, **kwargs)
+  else:
+      t = getattr(pd, pandas_meth)(data_file)
+  ```
+  Fall back to `astropy.table.Table.read()` with no arguments if neither path works.
+- (use `astropy.table.Table.read()` — it handles FITS, ECSV, CSV, VOTable, HDF5)
 - For each mapped column:
   - Count null/missing values: `np.sum(np.isnan(col))` for floats, `np.sum(col == None)` / masked array checks for strings. For FITS masked arrays, check `.mask` if present.
   - Get the column's numpy dtype

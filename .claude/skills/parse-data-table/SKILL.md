@@ -43,17 +43,36 @@ If none of the above work, tell the user you're unable to install the required l
 Use `astropy.table.Table.read()` first, which handles most formats automatically. Fall back to `pandas` if needed:
 
 ```python
+import json
 from astropy.table import Table
+
+reader = None
+fmt = None
+pandas_method = None
 
 try:
     t = Table.read("$ARGUMENTS")
+    reader = "astropy"
+    fmt = t.meta.get("comments", [None])[0]  # best-effort; may be None
     for col in t.columns:
         print(col, t[col].description, t[col].unit)
 except Exception:
     import pandas as pd
     df = pd.read_csv("$ARGUMENTS")  # adjust reader as needed
+    reader = "pandas"
+    pandas_method = "read_csv"  # update if a different reader was used
     for col in df.columns:
         print(col, df[col].dtype)
+
+# Write sidecar so downstream skills (e.g. validate-schema-mapping) can
+# reuse the same reader without re-discovering the format.
+with open("/tmp/astrodb-parse-result.json", "w") as f:
+    json.dump({
+        "file_path": "$ARGUMENTS",
+        "reader": reader,
+        "format": fmt,
+        "pandas_method": pandas_method,
+    }, f)
 ```
 
 See `references/file-formats.md` for the full list of supported formats.
