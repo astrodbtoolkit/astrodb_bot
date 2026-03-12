@@ -6,6 +6,8 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "anthropic>=0.84.0",
+    "astrodb-utils>=1.3",
+    "astrodbkit>=2.5",
     "astropy>=7.2.0",
     "lsst-felis>=30.2026.1100",
 ]
