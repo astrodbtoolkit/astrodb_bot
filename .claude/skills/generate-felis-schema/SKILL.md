@@ -88,6 +88,11 @@ Follow the syntax in `references/felis-syntax.md` exactly. Key rules:
 - Include `ivoa:ucd` where you can infer it confidently (see `references/felis-syntax.md`)
 - Add foreign key constraints for any `source`, `reference`, `telescope`, `instrument`
   columns that link to standard AstroDB lookup tables
+- **Always include stub definitions for lookup tables that are referenced via FK** —
+  even if the data file doesn't populate them directly. At minimum define `Sources`
+  (with `source` column) and `Publications` (with `reference` column) whenever those
+  FKs appear. Without a table definition in the same schema file, the FK constraint
+  references a table that doesn't exist in the document, which will fail Felis validation.
 
 ### Datatype mapping (data type → Felis datatype):
 | Data type | Felis datatype |
