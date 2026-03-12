@@ -128,12 +128,11 @@
           "text": "Column 'notes' is mapped to a comments field in some table"
         }
       ]
-    }
-  ,
+    },
     {
       "id": 4,
-      "prompt": "I have a FITS catalog of nearby galaxies called NearbyGalaxies_Jan2021_PUBLIC.fits and I want to load it into AstroDB. I ran parse-data-table on it and got this column summary. Can you map each column to the right AstroDB table and field?\n\n| Column | Description | Units | Type |\n|--------|-------------|-------|------|\n| GalaxyName | Galaxy name | — | str |\n| RA | Right Ascension (hours minutes seconds) | hms | str |\n| Dec | Declination (degrees arcminutes arcseconds) | dms | str |\n| EB-V | E(B-V) dust reddening | mag | float32 |\n| dmod | Distance Modulus (m-M)o | mag | float32 |\n| dmod+ | Distance Modulus error upper | mag | float32 |\n| dmod- | Distance Modulus error lower | mag | float32 |\n| vh | Heliocentric radial velocity | km/s | float32 |\n| vh+ | vh error upper | km/s | float32 |\n| vh- | vh error lower | km/s | float32 |\n| Vmag | Apparent V magnitude (Vega) | mag | float32 |\n| Vmag+ | Vmag error upper | mag | float32 |\n| Vmag- | Vmag error lower | mag | float32 |\n| PA | Position angle | deg | float32 |\n| PA+ | PA error upper | deg | float32 |\n| PA- | PA error lower | deg | float32 |\n| e=1-b/a | Projected ellipticity | — | float32 |\n| e+ | Ellipticity error upper | — | float32 |\n| e- | Ellipticity error lower | — | float32 |\n| muVo | Central V surface brightness | mag/arcsec^2 | float32 |\n| muVo+ | muVo error upper | mag/arcsec^2 | float32 |\n| muVo- | muVo error lower | mag/arcsec^2 | float32 |\n| rh | Half-light radius on major axis | arcmin | float32 |\n| rh+ | rh error upper | arcmin | float32 |\n| rh- | rh error lower | arcmin | float32 |\n| sigma_s | Stellar radial velocity dispersion | km/s | float32 |\n| sigma_s+ | sigma_s error upper | km/s | float32 |\n| sigma_s- | sigma_s error lower | km/s | float32 |\n| vrot_s | Stellar peak/max rotation velocity | km/s | float32 |\n| vrot_s+ | vrot_s error upper | km/s | float32 |\n| vrot_s- | vrot_s error lower | km/s | float32 |\n| MHI | HI mass | Msun | float32 |\n| sigma_g | HI radial velocity dispersion | km/s | float32 |\n| sigma_g+ | sigma_g error upper | km/s | float32 |\n| sigma_g- | sigma_g error lower | km/s | float32 |\n| vrot_g | HI peak/max rotation velocity | km/s | float32 |\n| vrot_g+ | vrot_g error upper | km/s | float32 |\n| vrot_g- | vrot_g error lower | km/s | float32 |\n| [Fe/H] | Stellar mean metallicity | dex | float32 |\n| feh+ | [Fe/H] error upper | dex | float32 |\n| feh- | [Fe/H] error lower | dex | float32 |\n| F | Flag | — | int16 |\n| pmra | Proper motion in RA*cos(dec) | mas/yr | float32 |\n| epmra+ | pmra error upper | mas/yr | float32 |\n| epmra- | pmra error lower | mas/yr | float32 |\n| pmdec | Proper motion in declination | mas/yr | float32 |\n| epmdec+ | pmdec error upper | mas/yr | float32 |\n| epmdec- | pmdec error lower | mas/yr | float32 |\n| References | Reference bibcodes | — | str |",
-      "expected_output": "Galaxy catalog mapped to AstroDB: GalaxyName→Sources, RA/Dec→Sources coordinates (with note on sexagesimal conversion), vh→RadialVelocities, Vmag→Photometry, pmra/pmdec→ProperMotions, [Fe/H]→ModeledParameters. Galaxy-specific columns (ellipticity, surface brightness, half-light radius, velocity dispersions, HI mass) flagged as not having direct AstroDB fields or mapped to ModeledParameters/CompanionParameters. Asymmetric error columns (dmod+/dmod-) noted as non-standard.",
+      "prompt": "I ran parse-data-table on NearbyGalaxies_Jan2021_PUBLIC.fits and want to load it into AstroDB. Here's the column summary — can you map each column to the right AstroDB table and field?\n\n| Column | Description | Units | Type |\n|--------|-------------|-------|------|\n| GalaxyName | Galaxy name | — | str (16-char) |\n| RA | Right Ascension (hours minutes seconds) | — | str (10-char) |\n| Dec | Declination (degrees arcminutes arcseconds) | — | str (11-char) |\n| EB-V | Reddening E(B-V) | mag | float32 |\n| dmod | Distance modulus (m-M)0 | mag | float32 |\n| dmod+ | Upper uncertainty on dmod | mag | float32 |\n| dmod- | Lower uncertainty on dmod | mag | float32 |\n| vh | Heliocentric radial velocity | km / s | float32 |\n| vh+ | Upper uncertainty on vh | km / s | float32 |\n| vh- | Lower uncertainty on vh | km / s | float32 |\n| Vmag | Apparent V magnitude (Vega mags) | mag | float32 |\n| Vmag+ | Upper uncertainty on Vmag | mag | float32 |\n| Vmag- | Lower uncertainty on Vmag | mag | float32 |\n| PA | Position angle | deg | float32 |\n| PA+ | Upper uncertainty on PA | deg | float32 |\n| PA- | Lower uncertainty on PA | deg | float32 |\n| e=1-b/a | Projected ellipticity, e=1-b/a | dimensionless_unscaled | float32 |\n| e+ | Upper uncertainty on e=1-b/a | dimensionless_unscaled | float32 |\n| e- | Lower uncertainty on e=1-b/a | dimensionless_unscaled | float32 |\n| muVo | Central V surface brightness | mag / arcsec2 | float32 |\n| muVo+ | Upper uncertainty on muVo | mag / arcsec2 | float32 |\n| muVo- | Lower uncertainty on muVo | mag / arcsec2 | float32 |\n| rh | Half-light radius measured on major axis | arcmin | float32 |\n| rh+ | Upper uncertainty on rh | arcmin | float32 |\n| rh- | Lower uncertainty on rh | arcmin | float32 |\n| sigma_s | Stellar radial velocity dispersion | km / s | float32 |\n| sigma_s+ | Upper uncertainty on sigma_s | km / s | float32 |\n| sigma_s- | Lower uncertainty on sigma_s | km / s | float32 |\n| vrot_s | Stellar peak/max rotation velocity | km / s | float32 |\n| vrot_s+ | Upper uncertainty on vrot_s | km / s | float32 |\n| vrot_s- | Lower uncertainty on vrot_s | km / s | float32 |\n| MHI | HI mass | solMass | float32 |\n| sigma_g | HI radial velocity dispersion | km / s | float32 |\n| sigma_g+ | Upper uncertainty on sigma_g | km / s | float32 |\n| sigma_g- | Lower uncertainty on sigma_g | km / s | float32 |\n| vrot_g | HI peak/max rotation velocity | km / s | float32 |\n| vrot_g+ | Upper uncertainty on vrot_g | km / s | float32 |\n| vrot_g- | Lower uncertainty on vrot_g | km / s | float32 |\n| [Fe/H] | Stellar mean metallicity | dex | float32 |\n| feh+ | Upper uncertainty on [Fe/H] | dex | float32 |\n| feh- | Lower uncertainty on [Fe/H] | dex | float32 |\n| F | Flag | — | int16 |\n| pmra | Proper motion in right ascension | mas / yr | float32 |\n| epmra+ | Upper uncertainty on pmra | mas / yr | float32 |\n| epmra- | Lower uncertainty on pmra | mas / yr | float32 |\n| pmdec | Proper motion in declination | mas / yr | float32 |\n| epmdec+ | Upper uncertainty on pmdec | mas / yr | float32 |\n| epmdec- | Lower uncertainty on pmdec | mas / yr | float32 |\n| References | Literature references | — | str (53-char) |",
+      "expected_output": "Galaxy catalog mapped with astropy-format units. vh (km / s) → RadialVelocities.rv_kms, pmra/pmdec (mas / yr) → ProperMotions, e=1-b/a (dimensionless_unscaled) → Morphology.ellipticity, rh (arcmin) → Morphology.half_light_radius_arcmin, MHI (solMass) → ModeledParameters. F flag column marked Unmatched with user prompt. RA/Dec sexagesimal conversion noted.",
       "files": [],
       "assertions": [
         {
@@ -142,7 +141,7 @@
         },
         {
           "id": "eval4_vh_radial_velocities",
-          "text": "Column 'vh' is mapped to RadialVelocities table and rv_kms field"
+          "text": "Column 'vh' with units 'km / s' (astropy format) is correctly mapped to RadialVelocities table and rv_kms field"
         },
         {
           "id": "eval4_Vmag_photometry",
@@ -150,31 +149,63 @@
         },
         {
           "id": "eval4_pmra_proper_motions",
-          "text": "Column 'pmra' is mapped to ProperMotions table and pm_ra field"
+          "text": "Column 'pmra' with units 'mas / yr' (astropy format) is mapped to ProperMotions table and pm_ra field"
         },
         {
           "id": "eval4_pmdec_proper_motions",
-          "text": "Column 'pmdec' is mapped to ProperMotions table and pm_dec field"
+          "text": "Column 'pmdec' with units 'mas / yr' (astropy format) is mapped to ProperMotions table and pm_dec field"
         },
         {
           "id": "eval4_feh_modeled_params",
           "text": "Column '[Fe/H]' is mapped to ModeledParameters table"
         },
         {
-          "id": "eval4_asymmetric_errors_noted",
-          "text": "The output notes that asymmetric error columns (e.g. dmod+/dmod-) are non-standard for AstroDB which uses symmetric errors, and explains how to handle them"
+          "id": "eval4_ellipticity_morphology",
+          "text": "Column 'e=1-b/a' with units 'dimensionless_unscaled' is mapped to Morphology table and ellipticity field"
         },
         {
-          "id": "eval4_galaxy_params_flagged",
-          "text": "Galaxy-specific columns (ellipticity e=1-b/a, surface brightness muVo, half-light radius rh, HI mass MHI) are either flagged as having no direct AstroDB field or suggested for ModeledParameters"
+          "id": "eval4_rh_morphology",
+          "text": "Column 'rh' is mapped to Morphology table and half_light_radius_arcmin field"
+        },
+        {
+          "id": "eval4_F_flag_unmatched",
+          "text": "Column 'F' (flag, int16) is marked Unmatched and the output asks the user what to do with it (options like pre-ingestion filtering or Sources.comments)"
         },
         {
           "id": "eval4_ra_dec_conversion_noted",
-          "text": "The output notes that RA and Dec are in sexagesimal (hms/dms) string format and need conversion to decimal degrees before ingestion"
+          "text": "The output notes that RA and Dec are strings in sexagesimal format and need conversion to decimal degrees before ingestion"
         },
         {
-          "id": "eval4_references_bibcode",
-          "text": "Column 'References' is mapped to Publications table or noted as containing bibcode references"
+          "id": "eval4_asymmetric_errors_noted",
+          "text": "The output notes that asymmetric error columns (e.g. dmod+/dmod-) are non-standard for AstroDB and explains handling options"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "I ran parse-data-table on arecibo_radar_observed_objects_list.csv and got this column summary. Can you map each column to the right AstroDB table and field?\n\n| Column | Description | Units | Type |\n|--------|-------------|-------|------|\n| Number | Identifier number of the observed object | — | str |\n| Name | Common name of the observed object | — | str |\n| Designation | Provisional or permanent designation (e.g., asteroid number) | — | str |\n| Category | Category/type of object (e.g., Planet, Moon, MBA, Comet) | — | str |\n| Components | Number of components in the system | dimensionless_unscaled | float64 |\n| Absolute Magnitute | Absolute magnitude of the object (note: column name contains typo — should be \"Magnitude\") | mag | float64 |\n| Quality Code for Best Images | Quality code for best radar images (numeric scale) | — | float64 |\n| NASA Link | URL link to the NASA page for the object | — | str |",
+      "expected_output": "Solar system catalog: identifiers map to Sources/Names, Absolute Magnitute marked Unmatched (absolute not apparent mag), NASA Link marked Unmatched (generic URL), Quality Code marked Unmatched (quality flag). User is asked what to do with all three Unmatched columns.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "eval5_identifier_sources",
+          "text": "At least one of Name/Designation/Number is mapped to Sources.source as a primary identifier"
+        },
+        {
+          "id": "eval5_absolute_mag_unmatched",
+          "text": "Column 'Absolute Magnitute' is NOT mapped directly to Photometry.magnitude without a caveat — it is either marked Unmatched or mapped to ModeledParameters, with a note explaining that AstroDB Photometry stores apparent magnitudes only"
+        },
+        {
+          "id": "eval5_nasa_link_unmatched",
+          "text": "Column 'NASA Link' is marked Unmatched and the output asks the user what to do with the URL (options like Sources.comments, Spectra.access_url, or skip)"
+        },
+        {
+          "id": "eval5_quality_code_unmatched",
+          "text": "Column 'Quality Code for Best Images' is marked Unmatched and the output asks the user what to do (options like pre-ingestion filtering or skip)"
+        },
+        {
+          "id": "eval5_unmatched_count",
+          "text": "At least 3 of the 8 columns are marked Unmatched or flagged with strong caveats — this is a solar system catalog and most columns fall outside AstroDB's stellar schema"
         }
       ]
     }

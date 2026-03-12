@@ -27,6 +27,19 @@ If given a file path, invoke `parse-data-table` first and wait for its output be
 The full table and field listing is in `references/schema.md` — read it now before proceeding.
 It covers all Lookup Tables, Main Tables, and Data Tables with every field name.
 
+## Astropy Unit Normalization
+
+When input comes from the `parse-data-table` skill, units may be in astropy's canonical spaced
+format. Treat these as equivalent to their compact forms when matching:
+
+| Astropy format | Equivalent to |
+|---|---|
+| `km / s` | `km/s` |
+| `mas / yr` | `mas/yr` |
+| `mag / arcsec2` | `mag/arcsec²` |
+| `solMass` | M☉ (solar masses) |
+| `dimensionless_unscaled` | dimensionless (no units) |
+
 ## Matching Strategy
 
 Read `references/column-patterns.md` for the full matching rules. It covers three layers in order:

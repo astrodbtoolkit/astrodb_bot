@@ -3,7 +3,11 @@
 ## Layer 1: Column name patterns (strongest signal)
 
 **Identifiers:**
-- `source`, `name`, `id`, `designation`, `target`, `obj`, `object` → `Sources.source` (primary identifier) or `Names.other_name` (alternate name). If the table has multiple name-like columns, the primary/canonical one goes to Sources, the rest to Names.
+- `source`, `name`, `id`, `designation`, `target`, `obj`, `object` → `Sources.source` (primary identifier) or `Names.other_name` (alternate name).
+- If the table has multiple name-like columns and it's not obvious which is the canonical primary
+  identifier (e.g., `Number`, `Name`, and `Designation` all present), **ask the user** which
+  column should become `Sources.source`. List the candidates with a brief description of each and
+  wait for their choice before finalizing the mapping. Map the rest to `Names.other_name`.
 
 **Coordinates:**
 - `ra`, `ra_deg`, `RA`, `Right_Ascension`, `RAJ2000` → `Sources.ra_deg`
@@ -122,3 +126,23 @@ When you identify that a column is an uncertainty on a value you've already mapp
 If a column clearly represents a physical quantity but doesn't fit any specific table field:
 - Fitted or modeled parameters (effective temperature `Teff`, luminosity `L`, mass `M`, radius `R`, surface gravity `logg`, metallicity `[Fe/H]`, age) → `ModeledParameters` (using the generic `value` + `unit` fields; put the parameter name in `parameter`)
 - Companion-derived measurements → `CompanionParameters`
+
+## Columns to mark Unmatched — ask the user
+
+For the following column types, mark as **Unmatched** in the output and explicitly ask the user
+what they want to do. Give a brief explanation of why, and suggest options:
+
+**Absolute magnitude columns** (`H`, `absolute_magnitude`, `abs_mag`, `M_V`, `M_B`, etc. when
+clearly absolute and not apparent magnitude):
+AstroDB's `Photometry.magnitude` stores *apparent* magnitudes only. Options to offer: store in
+`ModeledParameters` (parameter="absolute_magnitude_<band>", unit="mag"), or skip.
+
+**Generic URL / link columns** (`url`, `link`, `webpage`, `nasa_link`, `href`, etc. that are not
+clearly spectrum access URLs):
+No direct AstroDB field. Options: store in `Sources.comments`, map to `Spectra.access_url` if
+the link points to a spectrum, or skip.
+
+**Quality codes and observation flags** (`flag`, `flags`, `quality`, `qual`, `qflag`,
+`quality_code`, `f_flag`, numeric quality scores, etc.):
+No AstroDB field. Options: use for pre-ingestion row filtering (e.g. keep only quality=1 rows),
+store representative values in `Sources.comments`, or skip.
