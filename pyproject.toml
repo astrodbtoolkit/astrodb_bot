@@ -7,4 +7,5 @@ requires-python = ">=3.13"
 dependencies = [
     "anthropic>=0.84.0",
     "astropy>=7.2.0",
+    "lsst-felis>=30.2026.1100",
 ]

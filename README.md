@@ -12,11 +12,11 @@ Claude skills for interactive AstroDB ingestion workflows. Expects an input data
 ## Requirements
 
 - an AI skill runner that reads `.claude/skills/`
-- Python 3
-- `astropy`
-- `pandas` for fallback table parsing
 - `uv` or `pip` to install Python packages
-- `lsst-felis`
+- Python 3.11+
+  - `astropy`
+  - `pandas` for fallback table parsing
+  - `lsst-felis`
 
 ## License
 
