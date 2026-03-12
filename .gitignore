@@ -27,3 +27,7 @@ env/
 .vscode/
 *.swp
 *.swo
+
+
+uv.lock
+main.py
