@@ -4,11 +4,11 @@ Claude skills for interactive AstroDB ingestion workflows. Expects an input data
 
 ## Skills
 
-- `parse-data-table` — summarizes table columns, descriptions, units, and types.
-- `match-schema` — maps parsed columns to [AstroDB Template](https://github.com/astrodbtoolkit/astrodb-template-db) tables and fields
-- `validate-schema-mapping` - identifies problems with nulls and inconsistent data types
-- `generate-felis-schema` - creates a Felis-format schema.yaml file using outputs of previous skills
-- `create-astrodb` - Create an empty SQLite AstroDB database from a Felis-validated schema.yaml, following the astrodb-template-db file structure.
+- [`parse-data-table`](.claude/skills/parse-data-table/SKILL.md) — summarizes table columns, descriptions, units, and types.
+- [`match-schema`](.claude/skills/match-schema/SKILL.md) — maps parsed columns to [AstroDB Template](https://github.com/astrodbtoolkit/astrodb-template-db) tables and fields
+- [`validate-schema-mapping`](.claude/skills/validate-schema-mapping/SKILL.md) — identifies problems with nulls and inconsistent data types
+- [`generate-felis-schema`](.claude/skills/generate-felis-schema/SKILL.md) — creates a Felis-format schema.yaml file using outputs of previous skills
+- [`create-astrodb`](.claude/skills/create-astrodb/SKILL.md) — Create an empty SQLite AstroDB database from a Felis-validated schema.yaml, following the astrodb-template-db file structure.
 
 ## Requirements
 
