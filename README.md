@@ -1,6 +1,6 @@
 # AstroDB Bot
 
-Claude skills for interactive AstroDB ingestion workflows. Expects an input data table and will prepare it to be converted into a new database using the [AstroDB Template schema](https://github.com/astrodbtoolkit/astrodb-template-db) and conventions. It utilizes the [Felis system](https://felis.lsst.io/index.html) for describing database schemas.
+Claude skills for interactive AstroDB ingestion workflows. Expects an input data table and will prepare it to be converted into a new database using the [AstroDB Template schema](https://github.com/astrodbtoolkit/astrodb-template-db) and conventions. It utilizes the [Felis system](https://felis.lsst.io/index.html) for describing database schemas. Also uses `astrodbkit` and `astrodb_utils` packages for setting up and interacting with the database.
 
 ## Skills
 
@@ -8,6 +8,7 @@ Claude skills for interactive AstroDB ingestion workflows. Expects an input data
 - `match-schema` — maps parsed columns to [AstroDB Template](https://github.com/astrodbtoolkit/astrodb-template-db) tables and fields
 - `validate-schema-mapping` - identifies problems with nulls and inconsistent data types
 - `generate-felis-schema` - creates a Felis-format schema.yaml file using outputs of previous skills
+- `create-astrodb` - Create an empty SQLite AstroDB database from a Felis-validated schema.yaml, following the astrodb-template-db file structure.
 
 ## Requirements
 
@@ -17,6 +18,8 @@ Claude skills for interactive AstroDB ingestion workflows. Expects an input data
   - `astropy`
   - `pandas` for fallback table parsing
   - `lsst-felis`
+  - `astrodbkit`
+  - `astrodb_utils`
 
 ## License
 
