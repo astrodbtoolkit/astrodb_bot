@@ -1,0 +1,23 @@
+{
+  "skill_name": "create-astrodb",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "I just ran the generate-felis-schema skill and it wrote my schema to /tmp/BrownDwarfSurvey-schema.yaml — felis validate passed. Now I want to set up the actual database. Please create it for me in /tmp/bdsurvey-project/.",
+      "expected_output": "The skill runs felis validate on the schema, creates /tmp/bdsurvey-project/ with data/reference/ and data/source/ subdirectories, copies schema.yaml to the project root, creates database.toml with db_name='BrownDwarfSurvey', runs create_db.py to produce BrownDwarfSurvey.sqlite, and reports the resulting file paths.",
+      "files": ["/tmp/BrownDwarfSurvey-schema.yaml"]
+    },
+    {
+      "id": 1,
+      "prompt": "I have a Felis schema at /tmp/PhotometryCatalog-schema.yaml that I generated earlier. Can you initialize a new AstroDB database from it? Put everything in /tmp/photcat-db/.",
+      "expected_output": "The skill validates the schema with felis validate, creates the astrodb-template-db directory structure under /tmp/photcat-db/ (data/reference/, data/source/, schema.yaml, database.toml), runs create_db.py to produce PhotometryCatalog.sqlite, and confirms success with file paths.",
+      "files": ["/tmp/PhotometryCatalog-schema.yaml"]
+    },
+    {
+      "id": 2,
+      "prompt": "I have a schema.yaml sitting in /tmp/BrownDwarfSurvey-schema.yaml — I'm not sure if felis validate was run on it. Make the sqlite database at /tmp/bd-db-check/.",
+      "expected_output": "The skill explicitly runs felis validate on the schema before proceeding (because validation status is uncertain). If validation passes, it creates the full directory structure and database. It does NOT silently skip validation just because the user said they might not have done it.",
+      "files": ["/tmp/BrownDwarfSurvey-schema.yaml"]
+    }
+  ]
+}

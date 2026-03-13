@@ -1,0 +1,62 @@
+name: PhotometryCatalog
+"@id": "#PhotometryCatalog"
+description: "Multi-band photometry catalog for late-type stars"
+version: "1.0"
+tables:
+  - name: Sources
+    "@id": "#Sources"
+    description: "Catalog source identifiers"
+    primaryKey:
+      - "#Sources.source"
+    columns:
+      - name: source
+        "@id": "#Sources.source"
+        datatype: string
+        length: 100
+        nullable: false
+        description: "Unique source identifier"
+
+  - name: Photometry
+    "@id": "#Photometry"
+    description: "Broadband photometric measurements"
+    primaryKey:
+      - "#Photometry.source"
+    columns:
+      - name: source
+        "@id": "#Photometry.source"
+        datatype: string
+        length: 100
+        nullable: false
+        description: "Source identifier"
+      - name: band
+        "@id": "#Photometry.band"
+        datatype: string
+        length: 30
+        nullable: false
+        description: "Filter/band name"
+      - name: magnitude
+        "@id": "#Photometry.magnitude"
+        datatype: double
+        nullable: true
+        fits:tunit: mag
+        description: "Apparent magnitude"
+      - name: magnitude_error
+        "@id": "#Photometry.magnitude_error"
+        datatype: double
+        nullable: true
+        fits:tunit: mag
+        description: "Magnitude uncertainty"
+      - name: reference
+        "@id": "#Photometry.reference"
+        datatype: string
+        length: 50
+        nullable: true
+        description: "Publication reference"
+    constraints:
+      - name: Photometry_source_Sources_source
+        "@type": "ForeignKey"
+        "@id": "#FK_Photometry_source_Sources_source"
+        columns:
+          - "#Photometry.source"
+        referencedColumns:
+          - "#Sources.source"
