@@ -68,9 +68,15 @@ The final layout will follow astrodb-template-db:
 ├── schema.yaml              ← copy of the validated schema
 ├── <db-name>.sqlite         ← the new empty database
 ├── database.toml            ← config file
-└── data/
-    ├── reference/           ← lookup table JSON files (initially empty)
-    └── source/              ← source JSON files (initially empty)
+├── data/
+│   ├── reference/           ← lookup table JSON files (initially empty)
+│   └── source/              ← source JSON files (initially empty)
+└── tests/                   ← generated test suite (Step 8)
+    ├── conftest.py
+    ├── test_felis.py
+    ├── test_contents.py
+    ├── test_database.py
+    └── test_contents_*.py
 ```
 
 ## Step 5: Create directory structure and config
@@ -127,12 +133,53 @@ After the script succeeds, confirm the database file exists and is non-empty:
 ls -lh <project-root>/<db-name>.sqlite
 ```
 
-Then tell the user:
+## Step 8: Generate the test suite
+
+Use the bundled script `scripts/generate_tests.py` to create a `tests/` directory
+adapted for this database's schema. Run it from the project root so the generated
+conftest.py correctly references the database file:
+
+```bash
+cd <project-root>
+uv run python <skill-dir>/scripts/generate_tests.py \
+  --schema schema.yaml \
+  --output-dir tests/
+```
+
+The script reads the schema and produces:
+- `tests/__init__.py`
+- `tests/conftest.py` — builds the DB via `build_db_from_json()`, named correctly
+- `tests/test_felis.py` — validates schema.yaml against the Felis spec
+- `tests/test_contents.py` — checks all expected tables are present
+- `tests/test_database.py` — basic ORM add/delete smoke test
+- `tests/test_contents_sources.py` — Sources count (0 for empty DB)
+- `tests/test_contents_kinematics.py` — kinematic table counts (if tables exist)
+- `tests/test_contents_parameters.py` — parameter table counts (if tables exist)
+- `tests/test_contents_<NewTable>.py` — one file per table not in the astrodb-template-db
+
+After generation, run the tests to confirm they all pass on the fresh empty database:
+
+```bash
+cd <project-root>
+uv run pytest tests/ -v
+```
+
+**If tests fail**, the most common causes:
+- `conftest.py` can't find the db file → check that `database.toml` has the correct
+  `db_name` and that the `.sqlite` file exists in the project root
+- `test_table_presence` fails with wrong count → the schema has tables that
+  `generate_tests.py` didn't account for; re-run the script (it re-reads the schema)
+- Import errors for `astrodb_utils` or `felis` → run `uv add astrodb_utils felis` first
+
+## Step 9: Final report
+
+Tell the user:
 - The database file path
 - The schema.yaml location
 - The database.toml location
 - The data/ directory structure
-- What to do next (e.g., run ingestion scripts to populate the database)
+- The tests/ directory and how to run them
+- What to do next (e.g., add JSON data files and re-run the tests to update counts)
 
 Example success message:
 ```
@@ -140,6 +187,9 @@ Database created: MyDataset.sqlite (32 KB)
 Schema:           schema.yaml
 Config:           database.toml
 Data directory:   data/reference/  data/source/
+Tests:            tests/  (run with: uv run pytest tests/ -v)
 
-Next steps: add JSON data files to data/source/ and run your ingestion scripts.
+Next steps:
+  1. Add JSON data files to data/source/ and run your ingestion scripts.
+  2. Update the count assertions in tests/test_contents_*.py to match your data.
 ```

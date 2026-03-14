@@ -20,6 +20,7 @@ Claude skills for interactive AstroDB ingestion workflows. Expects an input data
   - `lsst-felis`
   - `astrodbkit`
   - `astrodb_utils`
+  - `pytest`
 
 ## License
 
