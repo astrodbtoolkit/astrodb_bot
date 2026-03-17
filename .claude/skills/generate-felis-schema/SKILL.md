@@ -115,7 +115,7 @@ reasonable ceiling (e.g., 30, 50, 100, 256). If you can't observe the data, use 
 
 ## Step 4: Write the schema file
 
-Save the generated YAML to `/tmp/<schema-name>-schema.yaml` using the Write tool. This is required — always produce a real `.yaml` file. Do not only paste the YAML in the chat; the file is what the user will use.
+Save the generated YAML to `tmp/<schema-name>-schema.yaml` using the Write tool. This is required — always produce a real `.yaml` file. Do not only paste the YAML in the chat; the file is what the user will use.
 
 Tell the user:
 - The file path (so they can open or copy it)
@@ -130,9 +130,9 @@ Do not reproduce the full YAML in the chat — just reference the file path. The
 After writing the file, run `felis validate` on it. If there is a `.venv` directory in the current working directory, use `.venv/bin/felis`; otherwise try `felis` on PATH:
 
 ```bash
-.venv/bin/felis validate /tmp/<schema-name>-schema.yaml
+.venv/bin/felis validate tmp/<schema-name>-schema.yaml
 # or
-felis validate /tmp/<schema-name>-schema.yaml
+felis validate tmp/<schema-name>-schema.yaml
 ```
 
 **If validation passes:** tell the user the schema is valid.

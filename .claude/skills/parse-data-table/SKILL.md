@@ -86,7 +86,7 @@ except Exception:
 # Write sidecar so downstream skills (e.g. match-schema, validate-schema-mapping)
 # can reuse the same reader without re-discovering the format.
 # Output file paths are added to the sidecar in Step 5.
-with open("/tmp/astrodb-parse-result.json", "w") as f:
+with open("tmp/astrodb-parse-result.json", "w") as f:
     json.dump({
         "file_path": "$ARGUMENTS",
         "reader": reader,
@@ -185,13 +185,13 @@ After writing the output files, update the sidecar to record their paths:
 ```python
 import json
 
-with open("/tmp/astrodb-parse-result.json") as f:
+with open("tmp/astrodb-parse-result.json") as f:
     sidecar = json.load(f)
 
 sidecar["output_md"] = "<path to .md file>"
 sidecar["output_html"] = "<path to .html file>"
 
-with open("/tmp/astrodb-parse-result.json", "w") as f:
+with open("tmp/astrodb-parse-result.json", "w") as f:
     json.dump(sidecar, f)
 ```
 

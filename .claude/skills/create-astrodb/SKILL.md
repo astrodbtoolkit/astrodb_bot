@@ -20,7 +20,7 @@ the schema is already validated. If there is any doubt, validate before proceedi
 
 Check (in order):
 1. A path the user explicitly stated in the conversation
-2. `/tmp/<schema-name>-schema.yaml` — the default output of generate-felis-schema
+2. `tmp/<schema-name>-schema.yaml` — the default output of generate-felis-schema
 3. `schema.yaml` in the current working directory
 
 If you cannot find the file, ask the user for the path before continuing.

@@ -1,6 +1,6 @@
 ---
 name: validate-schema-mapping
-description: Validate an AstroDB schema mapping by checking that data columns are compatible with the schema fields they've been mapped to. Use this skill whenever the user has completed a schema mapping (e.g., from the match-schema skill) and wants to check whether the actual data is safe to ingest — specifically: (1) are there null values in data columns that map to non-nullable schema fields, and (2) do data column types match the expected types in schema.yaml? Always use this skill proactively after match-schema produces a mapping, before the user proceeds to write ingestion code. Trigger on phrases like "validate","check my mapping", "will this ingest cleanly", "are there any type mismatches", "null check", "nullable violations", or "verify schema compatibility".
+description: Validate an AstroDB schema mapping by checking that data columns are compatible with the schema fields they've been mapped to. Use this skill whenever the user has completed a schema mapping (e.g., from the match-schema skill) and wants to check whether the actual data is safe to ingest — specifically (1) are there null values in data columns that map to non-nullable schema fields, and (2) do data column types match the expected types in schema.yaml? Always use this skill proactively after match-schema produces a mapping, before the user proceeds to write ingestion code. Trigger on phrases like "validate","check my mapping", "will this ingest cleanly", "are there any type mismatches", "null check", "nullable violations", or "verify schema compatibility".
 compatibility: python, astropy, pyyaml
 metadata:
   authors: ["Claude"]
@@ -66,7 +66,7 @@ Write a short Python script to:
 - Load the data file. First check for the sidecar written by parse-data-table:
   ```python
   import json, os
-  sidecar = "/tmp/astrodb-parse-result.json"
+  sidecar = "tmp/astrodb-parse-result.json"
   if os.path.exists(sidecar):
       meta = json.load(open(sidecar))
       reader      = meta["reader"]        # "astropy" or "pandas"
@@ -92,7 +92,7 @@ Write a short Python script to:
   - Count null/missing values: `np.sum(np.isnan(col))` for floats, `np.sum(col == None)` / masked array checks for strings. For FITS masked arrays, check `.mask` if present.
   - Get the column's numpy dtype
 
-Save the script to `/tmp/validate_mapping.py` and run it to get the per-column null counts and dtypes.
+Save the script to `tmp/validate_mapping.py` and run it to get the per-column null counts and dtypes.
 
 ## Step 3: Produce the validation report
 
