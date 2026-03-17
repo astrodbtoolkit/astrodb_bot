@@ -1,6 +1,8 @@
 # AstroDB Bot
 
-Claude skills for interactive AstroDB ingestion workflows. Expects an input data table and will prepare it to be converted into a new database using the [AstroDB Template schema](https://github.com/astrodbtoolkit/astrodb-template-db) and conventions. It utilizes the [Felis system](https://felis.lsst.io/index.html) for describing database schemas. Also uses `astrodbkit` and `astrodb_utils` packages for setting up and interacting with the database.
+Agent Skills for interactive AstroDB ingestion workflows. Expects an input data table and will prepare it to be converted into a new database using the [AstroDB Template schema](https://github.com/astrodbtoolkit/astrodb-template-db) and conventions. It utilizes the [Felis system](https://felis.lsst.io/index.html) for describing database schemas. Also uses `astrodbkit` and `astrodb_utils` packages for setting up and interacting with the database.
+
+To install this in another agent, you can rename/copy the `.claude` directory to whatever is appropriate for the agent (eg, `.cursor` for Cursor) or configure your agent to use this directory.
 
 ## Skills
 

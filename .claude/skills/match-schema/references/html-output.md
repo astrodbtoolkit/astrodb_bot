@@ -1,6 +1,6 @@
 # HTML Output Spec for match-schema
 
-This file defines the visual design for the `/tmp/schema-match-result.html` output file.
+This file defines the visual design for the `tmp/schema-match-result.html` output file.
 
 ---
 

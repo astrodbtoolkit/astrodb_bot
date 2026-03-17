@@ -33,5 +33,5 @@ Date: <today>
 
 If there are no issues, say so clearly: "All N mapped columns passed validation."
 
-Also write the full report to `/tmp/schema-validation-report.md` using the Write tool and
+Also write the full report to `tmp/schema-validation-report.md` using the Write tool and
 tell the user the path.
