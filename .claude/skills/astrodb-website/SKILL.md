@@ -47,7 +47,12 @@ The script will:
 ```bash
 cd website/
 uv sync
-uv run uvicorn src.main:app --reload --port 8000
+uv run serve
+```
+
+Alternatively, you can run it manually with:
+```bash
+uv run uvicorn astro_web.main:app --reload --port 8000
 ```
 
 ## Step 4: Report Success

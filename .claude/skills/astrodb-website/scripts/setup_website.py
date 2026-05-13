@@ -7,6 +7,7 @@ Generates a .env file for Astro-Web based on a provided database path.
 import argparse
 import sys
 from pathlib import Path
+
 import tomllib
 
 
@@ -58,29 +59,33 @@ def main():
     # Prepare .env content
     # Use absolute path for database URL to avoid relative path confusion
     db_url = f"sqlite:///{db_path}"
-    
+
     env_content = [
         f'ASTRO_WEB_DATABASE_URL="{db_url}"',
         'ASTRO_WEB_SCHEMA=""',
     ]
-    
+
     if lookup_tables:
         env_content.append(f'ASTRO_WEB_LOOKUP_TABLES="{",".join(lookup_tables)}"')
     else:
         # Default lookup tables from Astro-Web .env.example
-        env_content.append('ASTRO_WEB_LOOKUP_TABLES="Publications,Telescopes,Instruments,PhotometryFilters,Versions,RegimeList,SourceTypeList,ParameterList,AssociationList,CompanionList,Modes,Filters,Citations,References,Parameters,Regimes"')
+        env_content.append(
+            'ASTRO_WEB_LOOKUP_TABLES="Publications,Telescopes,Instruments,PhotometryFilters,Versions,RegimeList,SourceTypeList,ParameterList,AssociationList,CompanionList,Modes,Filters,Citations,References,Parameters,Regimes"'
+        )
 
     # Add other defaults
-    env_content.extend([
-        'ASTRO_WEB_PRIMARY_TABLE="Sources"',
-        'ASTRO_WEB_SOURCE_COLUMN="source"',
-        'ASTRO_WEB_FOREIGN_KEY="source"',
-        'ASTRO_WEB_PRIMARY_DATATYPE="str"',
-        'ASTRO_WEB_RA_COLUMN="ra"',
-        'ASTRO_WEB_DEC_COLUMN="dec"',
-        'ASTRO_WEB_SPECTRA_URL_COLUMN="access_url"',
-        'ASTRO_WEB_SOURCE_URL_BASE="/source/"',
-    ])
+    env_content.extend(
+        [
+            'ASTRO_WEB_PRIMARY_TABLE="Sources"',
+            'ASTRO_WEB_SOURCE_COLUMN="source"',
+            'ASTRO_WEB_FOREIGN_KEY="source"',
+            'ASTRO_WEB_PRIMARY_DATATYPE="str"',
+            'ASTRO_WEB_RA_COLUMN="ra"',
+            'ASTRO_WEB_DEC_COLUMN="dec"',
+            'ASTRO_WEB_SPECTRA_URL_COLUMN="access_url"',
+            'ASTRO_WEB_SOURCE_URL_BASE="/source/"',
+        ]
+    )
 
     env_path = astro_web_dir / ".env"
     with open(env_path, "w") as f:
@@ -90,7 +95,8 @@ def main():
     print("\nNext steps:")
     print(f"  cd {astro_web_dir.relative_to(Path.cwd())}")
     print("  uv sync")
-    print("  uv run uvicorn src.main:app --reload --port 8000")
+    print("  uv run serve  # Recommended")
+    print("  # OR: uv run uvicorn astro_web.main:app --reload --port 8000")
 
 
 if __name__ == "__main__":
