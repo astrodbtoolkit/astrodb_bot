@@ -18,6 +18,7 @@ def main():
     parser.add_argument("--toml-path", help="Path to database.toml (optional)")
     parser.add_argument("--ra-col", default="ra", help="Name of the RA column (default: ra)")
     parser.add_argument("--dec-col", default="dec", help="Name of the Dec column (default: dec)")
+    parser.add_argument("--primary-table", default="Sources", help="Name of the primary sources table (default: Sources)")
     args = parser.parse_args()
 
     db_path = Path(args.db_path).resolve()
@@ -78,7 +79,7 @@ def main():
     # Add other defaults
     env_content.extend(
         [
-            'ASTRO_WEB_PRIMARY_TABLE="Sources"',
+            f'ASTRO_WEB_PRIMARY_TABLE="{args.primary_table}"',
             'ASTRO_WEB_SOURCE_COLUMN="source"',
             'ASTRO_WEB_FOREIGN_KEY="source"',
             'ASTRO_WEB_PRIMARY_DATATYPE="str"',

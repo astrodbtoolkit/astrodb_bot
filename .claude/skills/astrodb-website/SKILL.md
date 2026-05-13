@@ -31,10 +31,24 @@ git submodule add https://github.com/astrodbtoolkit/Astro-Web website
 
 Use the bundled setup script to generate the `.env` file. You must point it to the database file and the directory where you cloned the website.
 
+### Step 2.1: Verify Table and Column Names (Crucial)
+
+Before running the setup script, verify the primary table name and coordinate columns:
+
+1. **Check for primary table**: Run `sqlite3 <path-to-your-db>.sqlite ".tables"`
+   - If a table named `Sources` or `sources` is not found, **ask the user** what the primary sources table is.
+2. **Check coordinate columns**: Run `sqlite3 <path-to-your-db>.sqlite "PRAGMA table_info(<primary_table>);"`
+   - Identify the RA and Dec column names (e.g., `ra` vs `ra_deg`).
+
+### Step 2.2: Run Setup Script
+
+Run the script with the verified table and column names:
+
 ```bash
 uv run python .claude/skills/astrodb-website/scripts/setup_website.py \
   --db-path <path-to-your-db>.sqlite \
   --website-dir website/ \
+  --primary-table <primary_table_name> \
   --ra-col <ra_column_name> \
   --dec-col <dec_column_name>
 ```
@@ -43,16 +57,7 @@ The script will:
 1. Create a `.env` file inside `website/`.
 2. Configure it to point to your database.
 3. Read `lookup_tables` from `database.toml` if it exists.
-4. Set the RA and Dec column names (defaults to `ra` and `dec`).
-
-### Step 2.1: Verify Column Names (Crucial)
-
-The website defaults to using `ra` and `dec` as column names for coordinates. If your database uses different names (e.g., `ra_deg`, `dec_deg`), you **must** ensure they are correctly set in the `.env` file or passed as arguments to the setup script.
-
-1. Check your schema: `sqlite3 <path-to-your-db>.sqlite "PRAGMA table_info(Sources);"`
-2. If you already ran the setup script, update `website/.env` manually:
-   - `ASTRO_WEB_RA_COLUMN="your_ra_column"`
-   - `ASTRO_WEB_DEC_COLUMN="your_dec_column"`
+4. Set the primary table and coordinate column names.
 
 ## Step 3: Install Dependencies and Start the Server
 
