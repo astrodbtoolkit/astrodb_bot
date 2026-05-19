@@ -2,6 +2,12 @@
 .claude/skills/*-workspace/
 .claire/
 
+# Agent folders
+.claude/
+.cursor/
+.gemini/
+.agents/
+
 # Python
 __pycache__/
 *.py[cod]
@@ -31,3 +37,4 @@ env/
 
 uv.lock
 main.py
+website/
