@@ -46,8 +46,11 @@ uv run python .claude/skills/astrodb-website/scripts/setup_website.py \
   --website-dir website/ \
   --primary-table <primary_table_name> \
   --ra-col <ra_column_name> \
-  --dec-col <dec_column_name>
+  --dec-col <dec_column_name> \
+  --source-col <source_column_name> \
+  --fk-col <foreign_key_column_name>
 ```
+
 
 ### Step 2.3: Validate .env Persistence (Crucial)
 

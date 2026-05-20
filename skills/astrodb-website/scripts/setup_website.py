@@ -19,7 +19,12 @@ def main():
     parser.add_argument("--ra-col", default="ra", help="Name of the RA column (default: ra)")
     parser.add_argument("--dec-col", default="dec", help="Name of the Dec column (default: dec)")
     parser.add_argument("--primary-table", default="Sources", help="Name of the primary sources table (default: Sources)")
+    parser.add_argument("--source-col", default="source", help="Name of the source column (default: source)")
+    parser.add_argument("--fk-col", help="Name of the foreign key column (defaults to --source-col)")
     args = parser.parse_args()
+
+    source_col = args.source_col
+    fk_col = args.fk_col if args.fk_col else source_col
 
     db_path = Path(args.db_path).resolve()
     if not db_path.exists():
@@ -80,8 +85,8 @@ def main():
     env_content.extend(
         [
             f'ASTRO_WEB_PRIMARY_TABLE="{args.primary_table}"',
-            'ASTRO_WEB_SOURCE_COLUMN="source"',
-            'ASTRO_WEB_FOREIGN_KEY="source"',
+            f'ASTRO_WEB_SOURCE_COLUMN="{source_col}"',
+            f'ASTRO_WEB_FOREIGN_KEY="{fk_col}"',
             'ASTRO_WEB_PRIMARY_DATATYPE="str"',
             f'ASTRO_WEB_RA_COLUMN="{args.ra_col}"',
             f'ASTRO_WEB_DEC_COLUMN="{args.dec_col}"',
